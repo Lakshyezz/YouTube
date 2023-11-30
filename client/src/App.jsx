@@ -21,8 +21,7 @@ flex: 7;
 background-color:${ ({theme}) => theme.bg};
 `;
 const Wrapper = styled.div`
-
- background-color: 
+  padding: 22px 96px;
  `;
 
 function App() {
