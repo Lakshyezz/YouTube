@@ -2,8 +2,6 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import { styled } from 'styled-components'
 
-const Card = () => {
-
 const Container = styled.div`
     width: 300px;
     margin-bottom: 45px;
@@ -42,7 +40,7 @@ const ChannelName = styled.h2`
   margin: 9px 0px;
 `;
 const Info = styled.div``;
-
+const Card = () => {
   return (
     <Link to= "/video/test" style={{textDecoration: "none"}}>
 
