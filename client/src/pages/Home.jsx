@@ -9,8 +9,7 @@ import axios from 'axios';
     flex-wrap: wrap;
   
   `;
-  // ,
-  // "proxy": "http://localhost:8800/api/"
+// "proxy": "http://localhost:8800/api/"
 
 const Home = () => {
 
@@ -18,21 +17,22 @@ const Home = () => {
 
   useEffect(()=>{
     const fetchVideos = async() => {
+      // const res = await axios.get("/bpi/currentprice.json");
       const res = await axios.get("http://localhost:8800/api/videos/random");
       // console.log("res.data " + res.data);
-      setVideos(res.data)
+      setVideos(res.data);
     }
     fetchVideos();
   }, []);
 
   return (
     <Container>
-     {videos.map(item => (
-      <Card/>
+     {videos.map((item,count) => (
+      <Card key={count}/>
      ))}
      
     </Container>
   )
 }
 
-export default Home
+export default Home;
