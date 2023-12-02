@@ -11,7 +11,7 @@ import axios from 'axios';
   `;
 // "proxy": "http://localhost:8800/api/"
 
-const Home = () => {
+const Home = ({ type }) => {
 
   const [videos, setVideos] = useState([]);
 
