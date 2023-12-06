@@ -9,8 +9,8 @@ import {
   Routes,
 } from "react-router-dom";
 import Home from "./pages/Home";
+import Signin from "./pages/SignIn";
 import Video from "./pages/Video";
-import Signin from "./pages/Signin";
 
 const Container = styled.div`
   display: flex;
