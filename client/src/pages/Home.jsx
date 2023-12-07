@@ -18,17 +18,17 @@ const Home = ({ type }) => {
   useEffect(()=>{
     const fetchVideos = async() => {
       // const res = await axios.get("/bpi/currentprice.json");
-      const res = await axios.get("http://localhost:8800/api/videos/random");
+      const res = await axios.get(`http://localhost:8800/api/videos/${type}`);
       // console.log("res.data " + res.data);
       setVideos(res.data);
     }
     fetchVideos();
-  }, []);
+  }, [type]);
 
   return (
     <Container>
-     {videos.map((item,count) => (
-      <Card key={count}/>
+     {videos.map((video,count) => (
+      <Card key={video._id} video = {video}/>
      ))}
      
     </Container>
