@@ -20,6 +20,7 @@ import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightne
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Signin from '../pages/Signin';
+import { logout } from '../redux/userSlice';
 
 const Container = styled.div`
     flex: 1;
@@ -84,8 +85,8 @@ gap: 8px;
 
 const Menu = ({darkMode, setDarkMode}) => { 
 
-  const {currentUser} = useSelector(state => state.user)
-
+  const currentUser = useSelector(state => state.user)
+  const dispatch = useDispatch()
   return (
     <Container>
         <Wrapper>
@@ -170,9 +171,11 @@ const Menu = ({darkMode, setDarkMode}) => {
           <HelpOutlineOutlinedIcon />
           Help
         </Item>
-        <Item onClick={()=>(
+        <Item
+         onClick={()=>(
             setDarkMode(!darkMode)
-        )}> 
+            // dispatch(logout())
+        )} > 
         <SettingsBrightnessOutlinedIcon />
           {darkMode? "Light": "Dark" } Theme
         </Item>

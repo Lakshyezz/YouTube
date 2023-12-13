@@ -55,14 +55,15 @@ const Info = styled.div`
 
 
 const Card = ({ type, video }) => {
-  const  [channel, setChannel ] = useState({});
+  const  [channel, setChannel] = useState({});
 
   useEffect(()=>{
     const fetchChannel = async() => {
       // const res = await axios.get("/bpi/currentprice.json");
       const res = await axios.get(`http://localhost:8800/api/users/find/${video.userId}`);
-      console.log("res.data " + res.data._id);
-      setChannel(res.data);
+      // console.log( JSON.stringify(res.data));
+      
+      setChannel(JSON.stringify(res.data));
     }
     fetchChannel();
   }, [video.userId]);
