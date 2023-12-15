@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
    currentUser: null,
-    token: null,
     loading: false,      // it will be false after hitting signin and if api request is right this will be true else it will be false and will show error
     error: false
 }
@@ -25,7 +24,6 @@ export const userSlice = createSlice(
              },
              logout: (state, action) => {
                 state.currentUser = null;
-                state.token = null;
                 state.loading = false;
                 state.error = false
              }

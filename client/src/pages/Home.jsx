@@ -18,11 +18,8 @@ const Home = ({ type }) => {
 
   useEffect(()=>{
     const fetchVideos = async() => {
-      // const res = await axios.get("/bpi/currentprice.json");
-      // console.log("route => " + `http://localhost:8800/api/videos/${type}`);
-
-      const res = await axios.get(`http://localhost:8800/api/videos/${type}`);
-      console.log("redux state " + currentUser.token);
+      const res = await axios.get(`http://localhost:8800/api/videos/${type}`,{withCredentials: true});
+      if(type == 'sub') console.log("video => " + JSON.stringify(videos));
       setVideos(res.data);
     }
     fetchVideos();

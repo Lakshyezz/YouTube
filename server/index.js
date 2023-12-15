@@ -26,9 +26,9 @@ const corsConfig = {
     origin: true,
 };
 
-app.use(cookieParser());
 app.use(express.json());
 app.use(cors(corsConfig));
+app.use(cookieParser());
 
 app.use("/api/auth", authRoutes)
 app.use("/api/users", userRoutes)

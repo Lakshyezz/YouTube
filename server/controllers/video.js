@@ -100,7 +100,20 @@ export const sub = async(req,res,next) =>{
             //  for (let i = 0; i < array.length-1; i++) {
                 //     if(list[i].userId !== list[i+1].userId) {}
                 // }
-                res.status(200).json(list.flat().sort((a,b) => b.createdAt - a.createdAt))
+            // let ans  = list.filter((item,index, self) => index === self.findIndex((t) => (
+            //     t.userId === item.userId
+            // )))
+            let map = new Map();
+            let ans = [];
+            list.forEach((item, index) => {
+                // if(item.userId > 1)
+                // console.log("map => " + (item[0]['userId'])); 
+                if( !map.has(item[0]['userId'] )){
+                    ans.push(item)
+                    map.set(item[0]['userId']);
+                }
+            })
+                res.status(200).json(ans.flat().sort((a,b) => b.createdAt - a.createdAt))
             } catch (error) {
                 next(error)
             }
