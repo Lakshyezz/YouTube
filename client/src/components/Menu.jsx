@@ -173,8 +173,8 @@ const Menu = ({darkMode, setDarkMode}) => {
         </Item>
         <Item
          onClick={()=>(
-            setDarkMode(!darkMode)
-            // dispatch(logout())
+            // setDarkMode(!darkMode);
+            dispatch(logout())
         )} > 
         <SettingsBrightnessOutlinedIcon />
           {darkMode? "Light": "Dark" } Theme

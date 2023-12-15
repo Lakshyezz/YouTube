@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 import Card from '../components/Card';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 
   const Container = styled.div`
@@ -9,17 +10,19 @@ import axios from 'axios';
     flex-wrap: wrap;
   
   `;
-// "proxy": "http://localhost:8800/api/"
 
 const Home = ({ type }) => {
 
   const [videos, setVideos] = useState([]);
+  const {currentUser} = useSelector(state => state.user)
 
   useEffect(()=>{
     const fetchVideos = async() => {
       // const res = await axios.get("/bpi/currentprice.json");
+      // console.log("route => " + `http://localhost:8800/api/videos/${type}`);
+
       const res = await axios.get(`http://localhost:8800/api/videos/${type}`);
-      // console.log("res.data " + res.data);
+      console.log("redux state " + currentUser.token);
       setVideos(res.data);
     }
     fetchVideos();

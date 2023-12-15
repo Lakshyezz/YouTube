@@ -87,14 +87,15 @@ export const trend = async(req,res,next) =>{
 }
 export const sub = async(req,res,next) =>{
     try {
-        const user = await User.findById(req.user.id)
+        
+        const user = await User.findById(req.user.id);
         const subscribedChannel = user.subscribedUsers;
         
       const list = await Promise.all(
-            subscribedChannel.map((channelId) =>{
-                return Video.find({userId: channelId})
+            subscribedChannel.map( async (channelId) =>{
+                return await Video.find({userId: channelId})
             })
-            )
+            );
             /** ## GETTING MORE THAN ONE SUBBED SAME CHANNELS FILTER IN CHECK API GET SUBSCRIBED VIDEO */
             //  for (let i = 0; i < array.length-1; i++) {
                 //     if(list[i].userId !== list[i+1].userId) {}
@@ -105,23 +106,23 @@ export const sub = async(req,res,next) =>{
             }
         }
         
-        export const getByTag = async(req,res,next) =>{
-            const tags = req.query.tags.split(",")
-            console.log(tags);
-            try {
-                const videos = await Video.find({tags: {$in: tags}}).limit(20)        
-                res.status(200).json(videos)
-            } catch (error) {
-                next(error)
-            }
-        }
-        export const search = async(req,res,next) =>{
-            const query = req.query.q
-            try {
-                const videos = await Video.find({title: {$regex: query, $options: "i"}}).limit(40)          
-                res.status(200).json(videos)
-            } catch (error) {
-                next(error)
-            }
-        }
+export const getByTag = async(req,res,next) =>{
+    const tags = req.query.tags.split(",")
+    console.log(tags);
+    try {
+        const videos = await Video.find({tags: {$in: tags}}).limit(20)        
+        res.status(200).json(videos)
+    } catch (error) {
+        next(error)
+    }
+}
+export const search = async(req,res,next) =>{
+    const query = req.query.q
+    try {
+        const videos = await Video.find({title: {$regex: query, $options: "i"}}).limit(40)          
+        res.status(200).json(videos)
+    } catch (error) {
+        next(error)
+    }
+}
         

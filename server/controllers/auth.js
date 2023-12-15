@@ -27,7 +27,7 @@ export const signin = async(req, res, next) =>{
 
        // Everything OK add jwt to the userid
        const token = jwt.sign({id: user._id},process.env.JWT)
-       console.log("token => " + token);
+    //    console.log("token => " + token);
        const { password, ...others} = user._doc
        
        res.cookie("access_token", token, {

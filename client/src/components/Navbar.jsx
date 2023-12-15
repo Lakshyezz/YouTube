@@ -84,7 +84,7 @@ const Navbar = () => {
           <User>
             <VideoCallOutlinedIcon/>
             <Avatar/>
-            {currentUser.name}
+            {currentUser.token}
           </User> : <Link to="signin" style={{textDecoration: "none"}}>
         <Button><AccountCircleOutlinedIcon/>SIGN IN</Button>
         </Link>}
