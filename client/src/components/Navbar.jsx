@@ -1,10 +1,11 @@
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import VideoCallOutlinedIcon from "@mui/icons-material/VideoCallOutlined";
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from "react-router-dom";
 import styled from 'styled-components';
+import { logout } from "../redux/userSlice";
 
 const Container = styled.div`
   position: sticky;
@@ -69,10 +70,24 @@ const Avatar = styled.img`
   border-radius: 50%;
   background-color:  #999;
 `;
+const ProfileMenu = styled.div`
+margin-right: 10px;
+  height: 100%;
+  width: 90px;
+  border:  0.5px  solid grey;
+  position: absolute;
+  top: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  right: 0;
+`
 const Navbar = () => {
 
   const {currentUser} = useSelector(state => state.user)
-
+  const [menuOn , setMenuOn] = useState(false);
+  const dispatch = useDispatch()
+  // dispatch(logout())
   return (
     <Container>
       <Wrapper>
@@ -83,14 +98,25 @@ const Navbar = () => {
         {currentUser ?
           <User>
             <VideoCallOutlinedIcon/>
-            <Avatar/>
-            {currentUser.token}
+            <Avatar onClick={()=> setMenuOn(!menuOn)}/>
+            {currentUser.name}
           </User> : <Link to="signin" style={{textDecoration: "none"}}>
         <Button><AccountCircleOutlinedIcon/>SIGN IN</Button>
         </Link>}
+      
       </Wrapper>
+      {
+           menuOn ? <ProfileMenu>
+           <Button onClick={()=> {
+            dispatch(logout());
+            setMenuOn(!menuOn)
+           }}>Log Out</Button>
+          </ProfileMenu>: <></>
+        }
     </Container>
+    
   )
 }
 
 export default Navbar
+

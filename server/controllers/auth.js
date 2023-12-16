@@ -19,7 +19,7 @@ export const signup = async(req, res, next) =>{
 }
 export const signin = async(req, res, next) =>{
     try {
-       const user = await User.findOne({ name: req.body.name });        // got the user from its name
+       const user = await User.findOne({ name: req.body.name }); // in this we are finding the user from its name as written in object
        if(!user) return next(createError(404,"User not found!"));
        
        const  isCorrect = await bcrypt.compare(req.body.password, user.password)   //  bcrypt comparing password with the user in db
@@ -36,7 +36,37 @@ export const signin = async(req, res, next) =>{
     } catch (error) {
         next(error) 
     }
-}
+};
+
+export const googleAuth = async (req, res, next) => {
+    try {   
+        console.log('here 1');
+        const user = await User.findOne({email: req.body.email});
+        
+        // console.log('here 2');
+        if(user){
+            const token = jwt.sign({ id: user._id }, process.env.JWT);
+            res.cookie("access_token", token, {
+                httpOnly: true
+            }).status(200).json(user._doc)
+            // console.log('here 3');
+        }else{
+            console.log('here 4');
+            const newUser = new User({
+                ...req.body,
+                fromGoogle : true,
+            });
+            const savedUser = await newUser.save();
+            const token = jwt.sign({ id: savedUser._id }, process.env.JWT);
+            res.cookie("access_token", token, {
+                httpOnly: true
+               }).status(200).json(savedUser._doc);
+        } 
+
+    } catch (error) {
+        next(error);
+    }
+};
 
 
 // token = "xyz"
