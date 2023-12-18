@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import ThumbDownOffAltOutlinedIcon from "@mui/icons-material/ThumbDownOffAltOutlined";
@@ -6,7 +6,11 @@ import ReplyOutlinedIcon from "@mui/icons-material/ReplyOutlined";
 import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined";
 // import Comments from "../components/Comments";
 import Card from "../components/Card";
+import { useSelector, useDispatch } from 'react-redux';
 import Comments from "../components/Comments";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+import { fetchSuccess } from "../redux/videoSlice";
 
 const Container = styled.div`
   display: flex;
@@ -106,6 +110,33 @@ const Subscribe = styled.button`
 `;
 
 const Video = () => {
+  const {currentUser} = useSelector(state => state.user)
+  const {currentVideo} = useSelector(state => state.video)
+  const dispatch = useDispatch()
+
+  const path = useLocation().pathname.split('/')[2];
+  // console.log("path => " + JSON.stringify(path));
+
+  const [channel, setChannel] = useState({});
+
+  useEffect(()=>{
+    const fetchData = async() => {
+      try {
+        const videoRes = await axios.get(`http://localhost:8800/api/videos/find/${path}`);
+        // console.log("videoRes.userID => " + videoRes.data.userId);
+        const channelRes = await axios.get(`http://localhost:8800/api/users/find/${videoRes.data.userId}`)
+        // console.log("videoRes.userID => " + channelRes.data);
+        
+        dispatch(fetchSuccess(videoRes.data))
+        setChannel(channelRes?.data);
+      } catch (error) {
+        console.log("error => " + error);
+      }
+    }
+    fetchData();
+  },[path,dispatch])
+
+
   return (
     <Container>
       <Content>
@@ -120,7 +151,7 @@ const Video = () => {
             allowfullscreen
           ></iframe>
         </VideoWrapper>
-        <Title>Test Video</Title>
+        <Title>{currentVideo.title}</Title>
         <Details>
           <Info>7,948,154 views • Jun 22, 2022</Info>
           <Buttons>
@@ -158,7 +189,7 @@ const Video = () => {
         <Hr />
         <Comments/>
       </Content>
-      <Recommendation>
+      {/* <Recommendation>
         <Card type="sm"/>
         <Card type="sm"/>
         <Card type="sm"/>
@@ -172,7 +203,7 @@ const Video = () => {
         <Card type="sm"/>
         <Card type="sm"/>
         <Card type="sm"/>
-      </Recommendation>
+      </Recommendation> */}
     </Container>
   );
 };

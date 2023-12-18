@@ -98,7 +98,9 @@ const Navbar = () => {
         {currentUser ?
           <User>
             <VideoCallOutlinedIcon/>
-            <Avatar onClick={()=> setMenuOn(!menuOn)}/>
+            <Avatar
+            src={currentUser.img}
+             onClick={()=> setMenuOn(!menuOn)}/>
             {currentUser.name}
           </User> : <Link to="signin" style={{textDecoration: "none"}}>
         <Button><AccountCircleOutlinedIcon/>SIGN IN</Button>
