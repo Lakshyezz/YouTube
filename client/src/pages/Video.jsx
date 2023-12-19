@@ -110,12 +110,11 @@ const Subscribe = styled.button`
 `;
 
 const Video = () => {
-  const {currentUser} = useSelector(state => state.user)
+  // const {currentUser} = useSelector(state => state.user)
   const {currentVideo} = useSelector(state => state.video)
   const dispatch = useDispatch()
 
   const path = useLocation().pathname.split('/')[2];
-  // console.log("path => " + JSON.stringify(path));
 
   const [channel, setChannel] = useState({});
 
@@ -125,10 +124,11 @@ const Video = () => {
         const videoRes = await axios.get(`http://localhost:8800/api/videos/find/${path}`);
         // console.log("videoRes.userID => " + videoRes.data.userId);
         const channelRes = await axios.get(`http://localhost:8800/api/users/find/${videoRes.data.userId}`)
-        // console.log("videoRes.userID => " + channelRes.data);
+        // console.log("channel.userID => " + JSON.stringify(channelRes.data));
         
-        dispatch(fetchSuccess(videoRes.data))
         setChannel(channelRes?.data);
+        console.log("channel => " + JSON.stringify(channel));
+        dispatch(fetchSuccess(videoRes.data));
       } catch (error) {
         console.log("error => " + error);
       }
@@ -151,12 +151,12 @@ const Video = () => {
             allowfullscreen
           ></iframe>
         </VideoWrapper>
-        <Title>{currentVideo.title}</Title>
+        <Title>{currentVideo?.title}</Title>
         <Details>
-          <Info>7,948,154 views • Jun 22, 2022</Info>
+          <Info>{currentVideo?.views} • Jun 22, 2022</Info>
           <Buttons>
             <Button>
-              <ThumbUpOutlinedIcon /> 123
+              <ThumbUpOutlinedIcon /> {currentVideo.likes?.length}
             </Button>
             <Button>
               <ThumbDownOffAltOutlinedIcon /> Dislike
@@ -172,15 +172,12 @@ const Video = () => {
         <Hr />
         <Channel>
           <ChannelInfo>
-            <Image src="https://yt3.ggpht.com/yti/APfAmoE-Q0ZLJ4vk3vqmV4Kwp0sbrjxLyB8Q4ZgNsiRH=s88-c-k-c0x00ffffff-no-rj-mo" />
+            <Image src={channel.img} />
             <ChannelDetail>
-              <ChannelName>Lama Dev</ChannelName>
-              <ChannelCounter>200K subscribers</ChannelCounter>
+              <ChannelName>{channel.name}</ChannelName>
+              <ChannelCounter>{channel.subscribers}</ChannelCounter>
               <Description>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Doloribus laborum delectus unde quaerat dolore culpa sit aliquam
-                at. Vitae facere ipsum totam ratione exercitationem. Suscipit
-                animi accusantium dolores ipsam ut.
+              {currentVideo.desc}
               </Description>
             </ChannelDetail>
           </ChannelInfo>
