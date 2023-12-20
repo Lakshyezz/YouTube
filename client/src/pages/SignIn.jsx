@@ -83,7 +83,7 @@ const SignIn = () => {
       {withCredentials: true});
       
       console.log("res => " + JSON.stringify(res.data));
-      dispatch(loginSuccess(res.data))
+      dispatch(loginSuccess(res.data));
     } catch (error) {
       dispatch(loginFailure())
     }

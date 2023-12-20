@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import ThumbDownOffAltOutlinedIcon from "@mui/icons-material/ThumbDownOffAltOutlined";
 import ReplyOutlinedIcon from "@mui/icons-material/ReplyOutlined";
 import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined";
@@ -110,9 +112,10 @@ const Subscribe = styled.button`
 `;
 
 const Video = () => {
-  // const {currentUser} = useSelector(state => state.user)
+  const {currentUser} = useSelector(state => state.user)
   const {currentVideo} = useSelector(state => state.video)
   const dispatch = useDispatch()
+  axios.defaults.withCredentials = true;
 
   const path = useLocation().pathname.split('/')[2];
 
@@ -121,21 +124,30 @@ const Video = () => {
   useEffect(()=>{
     const fetchData = async() => {
       try {
-        const videoRes = await axios.get(`http://localhost:8800/api/videos/find/${path}`);
+        const videoRes = await axios.get(`http://localhost:8800/api/videos/find/${path}`
+        ,{withCredentials: true});
         // console.log("videoRes.userID => " + videoRes.data.userId);
         const channelRes = await axios.get(`http://localhost:8800/api/users/find/${videoRes.data.userId}`)
         // console.log("channel.userID => " + JSON.stringify(channelRes.data));
         
         setChannel(channelRes?.data);
-        console.log("channel => " + JSON.stringify(channel));
+        // console.log("channel => " + JSON.stringify(channel));
         dispatch(fetchSuccess(videoRes.data));
       } catch (error) {
         console.log("error => " + error);
       }
     }
     fetchData();
-  },[path,dispatch])
+  },[path,dispatch]);
 
+  const handleLike = async() => {
+    // console.log("currentVideo._id => " + currentVideo._id);
+    await axios.put(`http://localhost:8800/api/users/like/${currentVideo._id}`);
+  }
+  const handleDislike = async() => {
+    // axios.defaults.withCredentials = true;
+    await axios.put(`http://localhost:8800/api/users/dislike/${currentVideo._id}`);
+  }
 
   return (
     <Container>
@@ -155,11 +167,14 @@ const Video = () => {
         <Details>
           <Info>{currentVideo?.views} • Jun 22, 2022</Info>
           <Buttons>
-            <Button>
-              <ThumbUpOutlinedIcon /> {currentVideo.likes?.length}
+            <Button onClick={handleLike}>
+             {currentVideo.likes?.includes(currentUser._id) ? 
+              <ThumbUpIcon/>
+             : <ThumbUpOutlinedIcon />} {currentVideo.likes?.length}
             </Button>
-            <Button>
-              <ThumbDownOffAltOutlinedIcon /> Dislike
+            <Button onClick={handleDislike}>
+              {currentVideo.dislikes?.includes(currentUser._id) ?
+             <ThumbDownIcon/> : <ThumbDownOffAltOutlinedIcon />} Dislike
             </Button>
             <Button>
               <ReplyOutlinedIcon /> Share

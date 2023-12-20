@@ -97,12 +97,6 @@ export const sub = async(req,res,next) =>{
             })
             );
             /** ## GETTING MORE THAN ONE SUBBED SAME CHANNELS FILTER IN CHECK API GET SUBSCRIBED VIDEO */
-            //  for (let i = 0; i < array.length-1; i++) {
-                //     if(list[i].userId !== list[i+1].userId) {}
-                // }
-            // let ans  = list.filter((item,index, self) => index === self.findIndex((t) => (
-            //     t.userId === item.userId
-            // )))
             let map = new Map();
             let ans = [];
             list.forEach((item, index) => {
@@ -112,7 +106,7 @@ export const sub = async(req,res,next) =>{
                     ans.push(item)
                     map.set(item[0]['userId']);
                 }
-            })
+            });
                 res.status(200).json(ans.flat().sort((a,b) => b.createdAt - a.createdAt))
             } catch (error) {
                 next(error)

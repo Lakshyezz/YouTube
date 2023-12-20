@@ -19,7 +19,7 @@ const Home = ({ type }) => {
   useEffect(()=>{
     const fetchVideos = async() => {
       const res = await axios.get(`http://localhost:8800/api/videos/${type}`,{withCredentials: true});
-      if(type == 'sub') console.log("video => " + JSON.stringify(videos));
+      if(type === 'sub') console.log("video => " + JSON.stringify(videos));
       setVideos(res.data);
     }
     fetchVideos();
