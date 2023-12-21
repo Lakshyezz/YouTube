@@ -12,7 +12,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import Comments from "../components/Comments";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import { fetchSuccess } from "../redux/videoSlice";
+import { dislike, fetchSuccess, like } from "../redux/videoSlice";
+import { subscription } from "../redux/userSlice";
 
 const Container = styled.div`
   display: flex;
@@ -126,12 +127,11 @@ const Video = () => {
       try {
         const videoRes = await axios.get(`http://localhost:8800/api/videos/find/${path}`
         ,{withCredentials: true});
-        // console.log("videoRes.userID => " + videoRes.data.userId);
+      
         const channelRes = await axios.get(`http://localhost:8800/api/users/find/${videoRes.data.userId}`)
-        // console.log("channel.userID => " + JSON.stringify(channelRes.data));
+        // console.log("currentUser.subscribedUsers => " + JSON.stringify(currentUser.subscribedUsers));
         
         setChannel(channelRes?.data);
-        // console.log("channel => " + JSON.stringify(channel));
         dispatch(fetchSuccess(videoRes.data));
       } catch (error) {
         console.log("error => " + error);
@@ -143,10 +143,18 @@ const Video = () => {
   const handleLike = async() => {
     // console.log("currentVideo._id => " + currentVideo._id);
     await axios.put(`http://localhost:8800/api/users/like/${currentVideo._id}`);
+    dispatch(like(currentUser._id))
   }
   const handleDislike = async() => {
     // axios.defaults.withCredentials = true;
     await axios.put(`http://localhost:8800/api/users/dislike/${currentVideo._id}`);
+    dispatch(dislike(currentUser._id))
+  }
+  const handleSub  = async() => {
+    console.log("channel._id => " + JSON.stringify(channel._id));
+    currentUser.subscribedUsers.includes(channel._id) ? await axios.put(`http://localhost:8800/api/users/unsub/${channel._id}`)
+    : await axios.put(`http://localhost:8800/api/users/sub/${channel._id}`);
+    dispatch(subscription(channel._id))
   }
 
   return (
@@ -158,9 +166,8 @@ const Video = () => {
             height="720"
             src="https://www.youtube.com/embed/k3Vfj-e1Ma4"
             title="YouTube video player"
-            frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
+            allowFullScreen
           ></iframe>
         </VideoWrapper>
         <Title>{currentVideo?.title}</Title>
@@ -196,7 +203,11 @@ const Video = () => {
               </Description>
             </ChannelDetail>
           </ChannelInfo>
-          <Subscribe>SUBSCRIBE</Subscribe>
+          <Subscribe
+            onClick={handleSub}
+          >{currentUser.subscribedUsers?.includes(channel._id)
+          ? "SUBSCRIBED" :
+           "SUBSCRIBE"}</Subscribe>
         </Channel>
         <Hr />
         <Comments/>

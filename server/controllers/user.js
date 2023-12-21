@@ -52,6 +52,7 @@ export const subscribe = async(req, res, next) =>{
         await User.findByIdAndUpdate(req.params.id, {
             $inc: {subscribers: 1}
         });
+        console.log("IN SUB FUNCTION BACKEND");
         res.status(200).json("Subscribed successfully!")
     } catch (error) {
         next(error);
@@ -60,6 +61,7 @@ export const subscribe = async(req, res, next) =>{
 
 //unsubscribe
 export const unsubscribe = async(req, res, next) =>{
+    // console.log("req" + JSON.stringify(req));
     try {
         await User.findByIdAndUpdate(req.user.id, {
             $pull: { subscribedUsers: req.paramas.id}

@@ -16,7 +16,8 @@ export const userSlice = createSlice(
              },
              loginSuccess: (state,action) => {
                 state.loading = false;  
-                state.currentUser = action.payload
+                state.currentUser = action.payload;
+               //  console.log("currentUser => " + JSON.stringify(state.currentUser));
              },
              loginFailure: (state,action) => {
                 state.loading = false;  
@@ -26,13 +27,24 @@ export const userSlice = createSlice(
                 state.currentUser = null;
                 state.loading = false;
                 state.error = false
-             }
+             },
+             subscription: (state, action) => {
+               if(state.currentUser.subscribedUsers.includes(action.payload)){
+                  state.currentUser.subscribedUsers.splice(
+                     state.currentUser.subscribedUsers.findIndex(
+                        itemId => itemId === action.payload
+                     )
+                  )
+               }else{
+                  state.currentUser.subscribedUsers.push(action.payload)
+               }
+             },
         }
     }
 );
 
 export const { loginStart, loginSuccess,
-     loginFailure, logout } = userSlice.actions;
+     loginFailure, logout, subscription } = userSlice.actions;
 
 export default userSlice.reducer;
 
