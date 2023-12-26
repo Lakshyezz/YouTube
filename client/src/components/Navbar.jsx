@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link } from "react-router-dom";
 import styled from 'styled-components';
 import { logout } from "../redux/userSlice";
+import Upload from "./Upload";
 
 const Container = styled.div`
   position: sticky;
@@ -86,10 +87,12 @@ const Navbar = () => {
 
   const {currentUser} = useSelector(state => state.user)
   const [menuOn , setMenuOn] = useState(false);
+  const [open, setOpen ] = useState(false);
   const dispatch = useDispatch()
   // dispatch(logout())
   return (
-    <Container>
+    <>
+      <Container>
       <Wrapper>
         <Search>
           <Input placeholder="Search"/>
@@ -97,7 +100,7 @@ const Navbar = () => {
         </Search>
         {currentUser ?
           <User>
-            <VideoCallOutlinedIcon/>
+            <VideoCallOutlinedIcon onClick = {() => setOpen(true)}/>
             <Avatar
             src={currentUser.img}
              onClick={()=> setMenuOn(!menuOn)}/>
@@ -106,16 +109,18 @@ const Navbar = () => {
         <Button><AccountCircleOutlinedIcon/>SIGN IN</Button>
         </Link>}
       
-      </Wrapper>
-      {
-           menuOn ? <ProfileMenu>
-           <Button onClick={()=> {
-            dispatch(logout());
-            setMenuOn(!menuOn)
-           }}>Log Out</Button>
-          </ProfileMenu>: <></>
-        }
-    </Container>
+        </Wrapper>
+        {
+            menuOn ? <ProfileMenu>
+            <Button onClick={()=> {
+              dispatch(logout());
+              setMenuOn(!menuOn)
+            }}>Log Out</Button>
+            </ProfileMenu>: <></>
+          }
+      </Container>
+      {open && <Upload setOpen = {setOpen}/>}
+    </>
     
   )
 }

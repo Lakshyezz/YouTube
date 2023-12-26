@@ -36,7 +36,10 @@ export const deleteUser = async(req, res, next) =>{
 // get user
 export const getUser = async(req, res, next) =>{
     try {
+        
+             
         const user = await User.findById(req.params.id)
+        // console.log("user => " + JSON.stringify(user));
         res.status(200).json(user)
     } catch (error) {
         next(error)
@@ -64,7 +67,7 @@ export const unsubscribe = async(req, res, next) =>{
     // console.log("req" + JSON.stringify(req));
     try {
         await User.findByIdAndUpdate(req.user.id, {
-            $pull: { subscribedUsers: req.paramas.id}
+            $pull: { subscribedUsers: req.params.id}
         });
         await User.findByIdAndUpdate(req.params.id, {
             $inc: {subscribers: -1}

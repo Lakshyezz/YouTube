@@ -75,7 +75,6 @@ const ChannelInfo = styled.div`
 `;
 
 const Image = styled.img`
-  width: 50px;
   height: 50px;
   border-radius: 50%;
 `;
@@ -112,6 +111,12 @@ const Subscribe = styled.button`
   cursor: pointer;
 `;
 
+const VideoFrame = styled.video`
+  max-height: 720px;
+  width: 100%;
+  object-fit: cover;
+`;
+
 const Video = () => {
   const {currentUser} = useSelector(state => state.user)
   const {currentVideo} = useSelector(state => state.video)
@@ -128,10 +133,13 @@ const Video = () => {
         const videoRes = await axios.get(`http://localhost:8800/api/videos/find/${path}`
         ,{withCredentials: true});
       
-        const channelRes = await axios.get(`http://localhost:8800/api/users/find/${videoRes.data.userId}`)
-        // console.log("currentUser.subscribedUsers => " + JSON.stringify(currentUser.subscribedUsers));
+        console.log("videoRes.data => " + JSON.stringify(videoRes.data._id));
         
-        setChannel(channelRes?.data);
+        const channelRes = await axios.get(`http://localhost:8800/api/users/find/${videoRes.data.userId}`)
+        // console.log("channel => " + JSON.stringify(channelRes));
+        
+        setChannel(channelRes.data);
+        console.log("channel => " + JSON.stringify(channel));
         dispatch(fetchSuccess(videoRes.data));
       } catch (error) {
         console.log("error => " + error);
@@ -161,14 +169,7 @@ const Video = () => {
     <Container>
       <Content>
         <VideoWrapper>
-        <iframe
-            width="100%"
-            height="720"
-            src="https://www.youtube.com/embed/k3Vfj-e1Ma4"
-            title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
+          <VideoFrame src = {currentVideo.videoUrl}/>
         </VideoWrapper>
         <Title>{currentVideo?.title}</Title>
         <Details>
@@ -194,7 +195,7 @@ const Video = () => {
         <Hr />
         <Channel>
           <ChannelInfo>
-            <Image src={channel.img} />
+            <Image src={channel?.img} />
             <ChannelDetail>
               <ChannelName>{channel.name}</ChannelName>
               <ChannelCounter>{channel.subscribers}</ChannelCounter>
@@ -210,7 +211,7 @@ const Video = () => {
            "SUBSCRIBE"}</Subscribe>
         </Channel>
         <Hr />
-        <Comments/>
+        <Comments videoId={currentVideo._id}/>
       </Content>
       {/* <Recommendation>
         <Card type="sm"/>
